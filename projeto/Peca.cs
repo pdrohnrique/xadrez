@@ -2,11 +2,11 @@ using System;
 
 public enum Cor {Branco, Preto}
 
-public interface Imovivel
+public interface IMovivel
 {
     bool MovimentoValido(int novaLinha, int novaColuna);
 }
-public abstract class Peca : Imovivel
+public abstract class Peca : IMovivel
 {
     public Cor Cor {get; protected set;}
     public int Linha {get; protected set;}

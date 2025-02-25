@@ -8,7 +8,7 @@ public class Peao : Peca
 
     public override bool MovimentoValido(int novaLinha, int novaColuna)
     {
-        int direcao = Cor == Cor.Branco ? 1 : -1;
+        int direcao = Cor == Cor.Branco ? -1 : +1;
         int diffLinha = novaLinha - Linha;
 
         bool movimentoBasico = (diffLinha == direcao) || (PrimeiroMovimento && diffLinha == 2 * direcao);
