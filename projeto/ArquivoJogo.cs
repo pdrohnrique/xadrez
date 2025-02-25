@@ -7,7 +7,7 @@ public static class ArquivoJogo
     {
         var estado = new
         {
-            Pecas = pecas.Cast<Peca?>().Select(p => new
+            Pecas = tabuleiro.GetPecas().Cast<Peca?>().Select((p, index) => new
             {
                 Tipo = p?.GetType().Name,
                 Cor = p?.Cor,
@@ -48,12 +48,12 @@ public static class ArquivoJogo
 
     public class EstadoJogo
     {
-        public PecasData[] Pecas { get; set; }
+        public PecasData[] Pecas { get; set; } = Array.Empty<PecasData>();
     }
 
     public class PecasData
     {
-        public string Tipo { get; set; }
+        public string? Tipo { get; set; }
         public Cor cor { get; set; }
         public int Linha { get; set; }
         public int Coluna { get; set; }

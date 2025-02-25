@@ -20,6 +20,11 @@ public class Tabuleiro
     {
         pecas[linha, coluna] = peca;
     }
+
+        public void ProximoTurno()
+    {
+        JogadorAtual = (JogadorAtual == Cor.Branco) ? Cor.Preto : Cor.Branco;
+    }
     
     public void InicializarTabuleiro()
     {

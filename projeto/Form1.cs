@@ -10,6 +10,7 @@ public partial class Form1 : Form
     private Button[,] botoes;
     private Peca? pecaSelecionada;
     private int linhaSelecionada, colunaSelecionada;
+    private PictureBox pictureBoxTabuleiro = new PictureBox();
 
     public Form1()
     {
@@ -23,6 +24,16 @@ public partial class Form1 : Form
     private void ConfigurarTabuleiroVisual()
     {
         this.Size = new Size(500, 500);
+
+        pictureBoxTabuleiro = new PictureBox
+        {
+            Size = new Size(480, 480),
+            Location = new Point(10, 10),
+            SizeMode = PictureBoxSizeMode.StretchImage,
+            Image = Image.FromFile("imagens/tabuleiro.png")
+        };
+
+        Controls.Add(pictureBoxTabuleiro);
     }
     
     private void CriarTabuleiro()
@@ -42,13 +53,14 @@ public partial class Form1 : Form
                     Location = new Point(tabuleiroX + coluna * tamanhoBotao, tabuleiroY + linha * tamanhoBotao),
                     Tag = new Point(linha, coluna),
                     FlatStyle = FlatStyle.Flat,
-                    BackColor = (linha + coluna) % 2 == 0 ? Color.Beige : Color.Green,
+                    BackColor = Color.Transparent,
                     BackgroundImageLayout = ImageLayout.Stretch
                 };
 
                 botao.Click += BotaoClicado;
                 botoes[linha, coluna] = botao;
                 Controls.Add(botao);
+                botao.BringToFront();
             }
         }
 
@@ -63,14 +75,19 @@ public partial class Form1 : Form
             for (int coluna = 0; coluna < 8; coluna++)
             {
                 Peca? peca = tabuleiro.GetPeca(linha, coluna);
-                botoes[linha, coluna].BackgroundImage = peca != null ? ObterImagemPeca(peca) : null;
+                Button botao = botoes[linha, coluna];
+
+                if (peca != null)
+                {
+                    botao.BackgroundImage = ObterImagemPeca(peca);
+                    botao.BackgroundImageLayout = ImageLayout.Stretch;
+                }
+                else
+                {
+                    botao.BackgroundImage = null;
+                }
             }
         }
-    }
-
-    public void ProximoTurno()
-    {
-        JogadorAtual = JogadorAtual == Cor.Branco ? Cor.Preto : Cor.Branco;
     }
 
     private Image? ObterImagemPeca(Peca peca)
@@ -116,11 +133,13 @@ public partial class Form1 : Form
             }
             else
             {
-                tabuleiro.MoverPeca(linhaSelecionada, colunaSelecionada, linha, coluna);
-                AtualizarTabuleiro();
+                if (tabuleiro.MoverPeca(linhaSelecionada, colunaSelecionada, linha, coluna))
+                {
+                    AtualizarTabuleiro();
+                    tabuleiro.ProximoTurno();
+                }
+                
                 pecaSelecionada = null;
-                tabuleiro.MoverPeca(...);
-                tabuleiro.ProximoTurno();
             }
         }
         catch (Exception ex)
