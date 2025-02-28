@@ -22,4 +22,10 @@ public abstract class Peca : IMovivel
     }
 
     public abstract bool MovimentoValido(int novaLinha, int novaColuna);
+
+    public virtual void AtualizarPosicao(int novaLinha, int novaColuna)
+    {
+        Linha = novaLinha;
+        Coluna = novaColuna;
+    }
 }

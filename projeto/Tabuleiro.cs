@@ -57,8 +57,6 @@ public class Tabuleiro
         pecas[0, 3] = new Dama(this, Cor.Preto, 0, 3);
     }
 
-    public List<string> HistoricoJogadas { get; } = new List<string>();
-
     public bool MoverPeca(int linhaOrigem, int colunaOrigem, int linhaDestino, int colunaDestino)
     {
         Peca? peca = GetPeca(linhaOrigem, colunaOrigem);
@@ -66,25 +64,79 @@ public class Tabuleiro
         if (peca == null || peca.Cor != JogadorAtual)
         throw new JogadaInvalidaException("Não é o turno deste jogador.");
 
-        if (peca == null)
-        throw new JogadaInvalidaException("Não há peça na posição selecionada.");
-
-        if (linhaDestino < 0 || linhaDestino > 7 || colunaDestino < 0 || colunaDestino > 7)
-        throw new MovimentoInvalidoException("Movimento fora do tabuleiro.");
-
         Peca? pecaDestino = pecas[linhaDestino, colunaDestino];
         if (pecaDestino != null && pecaDestino.Cor == peca.Cor)
         throw new JogadaInvalidaException("Não pode capturar uma peça da mesma cor.");
 
         if (!peca.MovimentoValido(linhaDestino, colunaDestino))
         throw new MovimentoInvalidoException("Movimento inválido para esta peça.");
+
+        Peca? pecaDestino = GetPeca(linhaDestino, colunaDestino);
+        Peca? copiaPecas = (Peca?[,])pecas.Clone();
+        copiaPecas[linhaDestino, colunaDestino] = peca;
+        copiaPecas[linhaOrigem, colunaOrigem] = null;
+
+        bool reiEmXeque = VerificarXequeSimulado(copiaPecas, peca.Cor);
+        if (reiEmXeque)
+        throw new JogadaInvalidaException("Movimento deixa o rei em xeque!");
         
         pecas[linhaDestino, colunaDestino] = peca;
         pecas[linhaOrigem, colunaOrigem] = null;
-
-        HistoricoJogadas.Add($"{peca.GetType().Name} de {peca.Cor} movida para ({linhaDestino}, {colunaDestino})");
         
+        peca.AtualizarPosicao(linhaDestino, colunaDestino);
         ProximoTurno();
+        return true;
+    }
+
+    private bool VerificarXequeSimulado(peca[,] pecasSimuladas, Cor cor)
+    {
+        (int reiLinha, int reiColuna) = EncontrarReiSimulado(pecasSimuladas, cor);
+
+        for (int linha = 0; linha < 8; linha++)
+        {
+            for (int coluna = 0; coluna < 8; coluna++)
+            {
+                Peca? peca = pecasSimuladas[linha, coluna];
+
+                if (peca != null && peca.Cor != cor && peca.MovimentoValido(reiLinha, reiColuna))
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool XequeMate(Cor cor)
+    {
+        if (!ReiEmXeque(cor))
+        return false;
+
+        for (int linha = 0; linha < 8; linha++)
+        {
+            for (int coluna = 0; coluna < 8; coluna++)
+            {
+                Peca? peca = GetPeca(linha, coluna);
+
+                if (peca == null || peca.Cor != cor)
+                continue;
+
+                for (int novaLinha = 0; novaLinha < 8; novaLinha++)
+                {
+                    for (int novaColuna = 0; novaColuna < 8; novaColuna++)
+                    {
+                        if (peca.MovimentoValido(novaLinha, novaColuna))
+                        {
+                            Peca?[,] copiaPecas = (Peca?[,])pecas.Clone();
+
+                            copiaPecas[novaLinha, novaColuna] = peca;
+                            copiaPecas[linha, coluna] = null;
+
+                            if (!VerificarXequeSimulado(copiaPecas, cor))
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
         return true;
     }
 
@@ -106,6 +158,36 @@ public class Tabuleiro
         }
 
         return true;
+    }
+
+    public (int Linha, int Coluna) EncontrarRei(Cor cor)
+    {
+        for (int linha = 0; linha < 8; linha++)
+        {
+            for (int coluna = 0; coluna < 8; coluna++)
+            {
+                Peca? peca = GetPeca(linha, coluna);
+                if (peca is Rei && peca.Cor == cor)
+                return (linha, coluna);
+            }
+        }
+        throw new Exception($"Rei {cor} não encontrado!");
+    }
+
+    public bool ReiEmXeque(Cor cor)
+    {
+        (int reiLinha, int reiColuna) = EncontrarRei(cor);
+
+        for (int linha = 0; linha < 8; linha++)
+        {
+            for (int coluna = 0; coluna < 8; coluna++)
+            {
+                Peca? peca = GetPeca(linha, coluna);
+                if (peca != null && peca.Cor != cor && peca.MovimentoValido(reiLinha, reiColuna))
+                return true;
+            }
+        }
+        return false;
     }
 
     public Peca? GetPeca(int linha, int coluna)
