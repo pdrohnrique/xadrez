@@ -2,13 +2,13 @@ using System;
 
 public class Bispo : Peca
 {
-    public Bispo(Cor cor, int linha, int coluna) : base(cor, linha, coluna) {}
+    public Bispo(Tabuleiro tabuleiro, Cor cor, int linha, int coluna) : base(tabuleiro, cor, linha, coluna) {}
 
     public override bool MovimentoValido(int novaLinha, int novaColuna)
     {
-        int diffLinha = Math.Abs(novaLinha - Linha);
-        int diffColuna = Math.Abs(novaColuna - Coluna);
+        if (Math.Abs(novaLinha - Linha) != Math.Abs(novaColuna - Coluna))
+        return false;
 
-        return diffLinha == diffColuna;
+        return Tabuleiro.CaminhoLivre(Linha, Coluna, novaLinha, novaColuna);
     }
 }

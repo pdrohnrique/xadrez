@@ -42,7 +42,7 @@ public partial class Form1 : Form
                     Location = new Point(tabuleiroX + coluna * tamanhoBotao, tabuleiroY + linha * tamanhoBotao),
                     Tag = new Point(linha, coluna),
                     FlatStyle = FlatStyle.Flat,
-                    BackColor = (linha + coluna) % 2 == 0 ? Color.PapayaWhip : Color.Peru,
+                    BackColor = (linha + coluna) % 2 == 0 ? Color.MintCream : Color.ForestGreen,
                     BackgroundImageLayout = ImageLayout.Stretch
                 };
 
@@ -121,12 +121,8 @@ public partial class Form1 : Form
             }
             else
             {
-                if (tabuleiro.MoverPeca(linhaSelecionada, colunaSelecionada, linha, coluna))
-                {
-                    AtualizarTabuleiro();
-                    tabuleiro.ProximoTurno();
-                }
-
+                tabuleiro.MoverPeca(linhaSelecionada, colunaSelecionada, linha, coluna);
+                AtualizarTabuleiro();
                 pecaSelecionada = null;
             }
         }

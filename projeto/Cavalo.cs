@@ -2,7 +2,7 @@ using System;
 
 public class Cavalo : Peca
 {
-    public Cavalo(Cor cor, int linha, int coluna) : base(cor, linha, coluna) {}
+    public Cavalo(Tabuleiro tabuleiro, Cor cor, int linha, int coluna) : base(tabuleiro, cor, linha, coluna) {}
 
     public override bool MovimentoValido(int novaLinha, int novaColuna)
     {

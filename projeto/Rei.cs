@@ -2,7 +2,7 @@ using System;
 
 public class Rei : Peca
 {
-    public Rei(Cor cor, int linha, int coluna) : base(cor, linha, coluna) {}
+    public Rei(Tabuleiro tabuleiro, Cor cor, int linha, int coluna) : base(tabuleiro, cor, linha, coluna) {}
 
     public override bool MovimentoValido(int novaLinha, int novaColuna)
     {

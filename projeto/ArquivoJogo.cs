@@ -39,7 +39,7 @@ public static class ArquivoJogo
             int linha = int.Parse(pecaData["Linha"].ToString());
             int coluna = int.Parse(pecaData["Coluna"].ToString());
 
-            Peca peca = CriarPeca(pecaData["Tipo"].ToString(), cor, linha, coluna);
+            Peca peca = CriarPeca(pecaData["Tipo"].ToString(), tabuleiro, cor, linha, coluna);
             tabuleiro.AdicionarPeca(peca, linha, coluna);
         }
 
@@ -59,16 +59,16 @@ public static class ArquivoJogo
         public int Coluna { get; set; }
     }
 
-    private static Peca CriarPeca(string tipo, Cor cor, int linha, int coluna)
+    private static Peca CriarPeca(string tipo, Tabuleiro tabuleiro, Cor cor, int linha, int coluna)
     {
         return tipo switch
         {
-            "Peao" => new Peao(cor, linha, coluna),
-            "Torre" => new Torre(cor, linha, coluna),
-            "Cavalo" => new Cavalo(cor, linha, coluna),
-            "Bispo" => new Bispo(cor, linha, coluna),
-            "Dama" => new Dama(cor, linha, coluna),
-            "Rei" => new Rei(cor, linha, coluna),
+            "Peao" => new Peao(tabuleiro, cor, linha, coluna),
+            "Torre" => new Torre(tabuleiro, cor, linha, coluna),
+            "Cavalo" => new Cavalo(tabuleiro, cor, linha, coluna),
+            "Bispo" => new Bispo(tabuleiro, cor, linha, coluna),
+            "Dama" => new Dama(tabuleiro, cor, linha, coluna),
+            "Rei" => new Rei(tabuleiro, cor, linha, coluna),
             _ => throw new NotSupportedException($"Tipo de peça não suportado: {tipo}")
         };
     }

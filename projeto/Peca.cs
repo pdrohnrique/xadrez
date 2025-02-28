@@ -8,12 +8,14 @@ public interface IMovivel
 }
 public abstract class Peca : IMovivel
 {
+    public Tabuleiro Tabuleiro { get; protected set;}
     public Cor Cor {get; protected set;}
     public int Linha {get; protected set;}
     public int Coluna {get; protected set;}
 
-    public Peca(Cor cor, int linha, int coluna)
+    public Peca(Tabuleiro tabuleiro, Cor cor, int linha, int coluna)
     {
+        Tabuleiro = tabuleiro;
         Cor = cor;
         Linha = linha;
         Coluna = coluna;
