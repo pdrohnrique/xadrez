@@ -28,4 +28,9 @@ public abstract class Peca : IMovivel
         Linha = novaLinha;
         Coluna = novaColuna;
     }
+
+    public virtual Peca Clone()
+    {
+        return (Peca)this.MemberwiseClone();
+    }
 }

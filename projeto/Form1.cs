@@ -126,12 +126,7 @@ public partial class Form1 : Form
                 pecaSelecionada = null;
             }
 
-            if (tabuleiro.XequeMate(tabuleiro.JogadorAtual))
-            {
-                MessageBox.Show("Xeque-Mate! O jogo acabou.", "Fim de jogo", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                Application.Exit();
-            }
-            else if (tabuleiro.ReiEmXeque(tabuleiro.JogadorAtual))
+            if (tabuleiro.ReiEmXeque(tabuleiro.JogadorAtual))
             {
                 MessageBox.Show("Xeque!", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
